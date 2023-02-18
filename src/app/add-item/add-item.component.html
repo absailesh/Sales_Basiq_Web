@@ -1,0 +1,167 @@
+<div class="edit-modal">
+  <div mat-dialog-content>
+    <p class="heading">Add Item</p>
+
+    <div class="cs-form">
+    <form name="detail" #f="ngForm" (ngSubmit)=" f.valid && save_order()">
+      <div class="row">
+        <div class="col s12">
+          <div class="card pb0">
+            <!-- <div class="card-head mt16">
+              <h2>Basic Information</h2>
+            </div> -->
+            <div class="card-body cs-form">
+              <div class="row">
+                <div class="col s12 m3 l3">
+                  <mat-form-field appearance="outline" [ngClass]="{'has-error' : segment_id.invalid } ">
+                    <mat-label>Segment</mat-label>
+                    <mat-select name="segment_id" #segment_id="ngModel" [(ngModel)]="orderData.segment_id"
+                      (selectionChange)="getProductList(orderData.segment_id)" required>
+                      <mat-option *ngFor="let row of segmentList" value="{{row.id}}" color="accent">{{row.category}}
+                        </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <div class="alert alert-danger" *ngIf="f.submitted && segment_id?.invalid ">
+                    This field is required
+                  </div>
+                </div>
+                <div class="col s12 m3 l3">
+                  <mat-form-field appearance="outline" [ngClass]="{'has-error' : product_id.invalid } ">
+                    <mat-label>Item</mat-label>
+                    <mat-select name="product_id" #product_id="ngModel" [(ngModel)]="orderData.product_id"
+                      (selectionChange)="get_product_Size(orderData.product_id)" required>
+                      <mat-option *ngFor="let row of productlist" value="{{row.id}}" color="accent">{{row.product_name}}
+                        </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <div class="alert alert-danger" *ngIf="f.submitted && product_id?.invalid ">
+                    This field is required
+                  </div>
+                </div>
+                <div *ngIf="orderData.feature_apply != 'No'" class="col s12 m3 l3">
+                  <mat-form-field appearance="outline" [ngClass]="{'has-error' : product_size.invalid } ">
+                    <mat-label>Features</mat-label>
+                    <mat-select name="product_size" #product_size="ngModel" [(ngModel)]="orderData.product_size"
+                      (selectionChange)="Feature_Product_Price(orderData.product_size)" required>
+                      <mat-option *ngFor="let row of product_price_list" value="{{row.product_size}}" color="accent">
+                        {{row.product_size}} "</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <div class="alert alert-danger" *ngIf="f.submitted && product_size?.invalid ">
+                    This field is required
+                  </div>
+                </div>
+                <div class="col s12 m3 l3">
+                  <mat-form-field appearance="outline" [ngClass]="{'has-error' : qty.invalid } ">
+                    <mat-label>Qty</mat-label>
+                    <input matInput name="qty" #qty="ngModel" [(ngModel)]="orderData.qty"
+                      [ngClass]="{'has-error' : qty.invalid } " (keyup)="Calc()" required>
+                  </mat-form-field>
+                  <div class="alert alert-danger" *ngIf="f.submitted && qty?.invalid ">
+                    This field is required
+                  </div>
+                </div>
+                <!-- <div class="col s12 m3 l3">
+                  <mat-form-field appearance="outline" [ngClass]="{'has-error' : discounted_price.invalid } ">
+                    <mat-label>Discounted Price</mat-label>
+                    <input matInput name="discounted_price" #discounted_price="ngModel"
+                      [(ngModel)]="orderData.discounted_price" [ngClass]="{'has-error' : discounted_price.invalid } "
+                      [readonly]="true" required>
+                  </mat-form-field>
+                  <div class="alert alert-danger" *ngIf="f.submitted && discounted_price?.invalid ">
+                    This field is required
+                  </div>
+                </div> -->
+              </div>
+              <!-- <div class="row">
+                <div class="col s12 m3 l3">
+                  <mat-form-field appearance="outline" [ngClass]="{'has-error' : net_price.invalid } ">
+                    <mat-label>Price</mat-label>
+                    <input matInput name="net_price" #net_price="ngModel"
+                      [(ngModel)]="orderData.net_price" [ngClass]="{'has-error' : net_price.invalid } "
+                      [readonly]="true" required>
+                  </mat-form-field>
+                  <div class="alert alert-danger" *ngIf="f.submitted && net_price?.invalid ">
+                    This field is required
+                  </div>
+                </div>
+                <div class="col s12 m3 l3">
+                  <mat-form-field appearance="outline" [ngClass]="{'has-error' : qty.invalid } ">
+                    <mat-label>Qty</mat-label>
+                    <input matInput name="qty" #qty="ngModel" [(ngModel)]="orderData.qty"
+                      [ngClass]="{'has-error' : qty.invalid } " (keyup)="Calc()" required>
+                  </mat-form-field>
+                  <div class="alert alert-danger" *ngIf="f.submitted && qty?.invalid ">
+                    This field is required
+                  </div>
+                </div>
+                <div class="col s12 m3 l3">
+                  <mat-form-field appearance="outline" [ngClass]="{'has-error' : amount.invalid } ">
+                    <mat-label>Sub Total</mat-label>
+                    <input matInput name="amount" #amount="ngModel"
+                      [(ngModel)]="orderData.amount" [ngClass]="{'has-error' : amount.invalid } "
+                      [readonly]="true" required>
+                  </mat-form-field>
+                  <div class="alert alert-danger" *ngIf="f.submitted && amount?.invalid ">
+                    This field is required
+                  </div>
+                </div>
+                <div class="col s12 m3 l3">
+                  <mat-form-field appearance="outline" [ngClass]="{'has-error' : gst_amount.invalid } ">
+                    <mat-label>GST</mat-label>
+                    <input matInput name="gst_amount" #gst_amount="ngModel"
+                      [(ngModel)]="orderData.gst_amount" [ngClass]="{'has-error' : gst_amount.invalid } "
+                      [readonly]="true" required>
+                  </mat-form-field>
+                  <div class="alert alert-danger" *ngIf="f.submitted && gst_amount?.invalid ">
+                    This field is required
+                  </div>
+                </div>
+                <div class="col s12 m3 l3">
+                  <mat-form-field appearance="outline" [ngClass]="{'has-error' : total_amount.invalid } ">
+                    <mat-label>Net Amount</mat-label>
+                    <input matInput name="total_amount" #total_amount="ngModel"
+                      [(ngModel)]="orderData.total_amount" [ngClass]="{'has-error' : total_amount.invalid } "
+                      [readonly]="true" required>
+                  </mat-form-field>
+                  <div class="alert alert-danger" *ngIf="f.submitted && total_amount?.invalid ">
+                    This field is required
+                  </div>
+                </div>
+
+              </div> -->
+              <!-- <div class="row"> -->
+
+              <!-- </div> -->
+              <!-- <div class="row"> -->
+
+
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col s12">
+          <div class="text-right">
+            <button class="mr10" mat-stroked-button color="warn"  [mat-dialog-close]="false">Cancel</button>
+            <button [ngClass]="{'loading': savingFlag == true}" mat-raised-button color="accent" type="submit"
+              [disabled]="savingFlag == true">
+              {{savingFlag == true ? 'Saving' : 'Update'}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  </div>
+  <!-- <div mat-dialog-actions>
+    <button class="mr10" mat-stroked-button color="warn"  [mat-dialog-close]="false">Cancel</button>
+    <button [ngClass]="{'loading': savingFlag == true}" mat-raised-button color="accent" type="submit"
+    [disabled]="savingFlag == true">
+    {{savingFlag == true ? 'Saving' : 'Update'}}
+  </button> -->
+  <!-- </div> -->
+</div>
