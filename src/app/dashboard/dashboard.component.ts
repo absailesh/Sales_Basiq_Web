@@ -17,12 +17,9 @@ import indiaMap from '../../assets/indiaMap';
 
 
 export class DashboardComponent implements OnInit {
-
-  ngOnInit() {
-    setTimeout(() => {
-      this.getindiaMap();
-    }, 700);    
-  }
+  login_data:any;
+  tabs:any = []
+  tabValue:any;
 
   transectionValue:any = [100, 0, 25, 12, 25, 10, 100, 80, 25, 12, 25, 10];
   invoiceValue:any = [40000, 50000, 35000, 21000, 10000, 17000, 80000, 13000, 40000, 50000, 35000, 21000];
@@ -71,9 +68,37 @@ export class DashboardComponent implements OnInit {
   currentDate = new Date();   
     
   constructor(public serve:DatabaseService,public dialog: MatDialog ,public route: Router,private renderer: Renderer2,public session:sessionStorage) {
+    this.login_data = this.session.getSession();
+    this.login_data = this.login_data.value;
+    this.login_data = this.login_data.data;
   }
+  ngOnInit() {
+    if(this.login_data.id == 1){
+      this.tabs = ['Sales','Enquiry', 'Account','Influencer Reward', 'Forecasting'];
+      this.tabValue = 'Sales';
 
-  tabs = ['Sales','Enquiry', 'Account','Influencer Reward', 'Forecasting'];
+    }else if(this.login_data.id == 432){
+      this.tabs = ['Sales','Enquiry', 'Account'];
+      this.tabValue = 'Sales';
+
+    }else if(this.login_data.id == 433){
+      this.tabs = ['Sales', 'Account'];
+      this.tabValue = 'Sales';
+    
+    }else if(this.login_data.id == 434){
+      this.tabs = ['Influencer Reward'];
+      this.tabValue = 'Influencer Reward';
+    }else{
+      this.tabs = [''];
+      this.tabValue = 'Other';
+
+    }
+
+    setTimeout(() => {
+      this.getindiaMap();
+    }, 700);    
+  }
+  
   
   segment =[
     {'state':'Andhra Pradesh'},
@@ -105,7 +130,6 @@ export class DashboardComponent implements OnInit {
     {'state':'Uttarakhand'},
     {'state':'West Bengal'},
   ]
-  tabValue :any = 'Sales';
   
   getindiaMap(){
     let mapIndiaOpt:any  = {

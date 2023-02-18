@@ -1,2 +1,1 @@
-# Sales_Basiq_Web
-basiq web for sales demo
+# Basiq_web

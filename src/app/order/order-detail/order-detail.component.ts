@@ -23,8 +23,8 @@ import * as $ from "jquery";
 export class OrderDetailComponent implements OnInit {
     orderType: any = 'order';
     status: any;
-    skLoading:boolean = false;
-    
+    skLoading: boolean = false;
+
     data: any = {};
     login_data: any = [];
     order_id: any;
@@ -32,34 +32,35 @@ export class OrderDetailComponent implements OnInit {
     invoice_bill_item: any = [];
     order_logs: any = [];
     order_detail: any = [];
+    item_array: any = []
     login_dr_id: any;
     editqty: any = false;
     distrbutorId: any;
     constructor(public route: ActivatedRoute, public serve: DatabaseService, public toast: ToastrManager, public dialog: MatDialog, public session: sessionStorage, public dialogs: DialogComponent, public router: Router, public alert: DialogComponent) {
-        
+
         this.login_data = this.session.getSession();
         this.login_data = this.login_data.value.data;
-        
+
         if (this.login_data.access_level != '1') {
             this.login_dr_id = this.login_data.id;
         }
-        
+
         this.route.params.subscribe(params => {
             this.order_id = params.id;
             this.serve.currentUserID = params.id
             this.status = this.route.queryParams['_value']['status'];
-            
+
         });
         this.orderDetail();
     }
-    
+
     ngOnInit() {
-        
-        
+
+
     }
-    
-    
-    
+
+
+
     open_dipatch_model(): void {
         const dialogRef = this.dialog.open(OrderDispatchComponent, {
             width: '1000px', data: {
@@ -70,14 +71,14 @@ export class OrderDetailComponent implements OnInit {
                 from: 'order_detail_page'
             }
         });
-        
+
         dialogRef.afterClosed().subscribe(result => {
-            if(result == true){
+            if (result == true) {
                 this.orderDetail();
             }
         });
     }
-    
+
     openEditDialog(user_id, type): void {
         const dialogRef = this.dialog.open(OrderEditModalComponent, {
             width: '400px', data: {
@@ -85,16 +86,16 @@ export class OrderDetailComponent implements OnInit {
                 type: type,
                 user_id: user_id
             }
-            
+
         });
-        
+
         dialogRef.afterClosed().subscribe(result => {
-            if(result != false){
+            if (result != false) {
                 this.orderDetail();
             }
         });
     }
-    
+
     loader: any;
     edit_cash_discount: any = false;
     Order_Amount: any;
@@ -103,11 +104,11 @@ export class OrderDetailComponent implements OnInit {
         this.skLoading = true;
         let id = { 'id': this.order_id }
         this.serve.post_rqst(id, "Order/primaryOrderDetail").subscribe((result => {
-            if(result['statusCode']==200){
+            if (result['statusCode'] == 200) {
                 this.skLoading = false;
                 this.order_detail = result['result'];
                 this.distrbutorId = this.order_detail['dr_id'];
-                
+
                 this.order_item = result['result']['item_info'];
                 this.invoice_bill_item = result['invoice_bill'];
                 this.order_logs = result['result']['order_log'];
@@ -120,29 +121,76 @@ export class OrderDetailComponent implements OnInit {
                 this.Order_Amount = Number(this.order_detail.order_total) + Number(this.order_detail.order_discount)
                 this.order_item.map((row) => {
                     row.editqty = false
-                    
+
                 })
                 setTimeout(() => {
                     this.loader = '';
-                    
+
                 }, 700);
-            }else{
+            } else {
                 setTimeout(() => {
                     this.loader = '';
-                    
+
                 }, 700);
                 this.skLoading = false;
                 this.toast.errorToastr(result['statusMsg'])
             }
         }))
     }
-    goTODetail(id){
-        this.router.navigate(['/billing-details/'+id],{ queryParams: { id} });
+    InvoiceData: any = {}
+    updateInvoice() {
+
+        this.InvoiceData.account_code = this.order_detail.dr_code;
+        this.InvoiceData.company_name = this.order_detail.company_name;
+        this.InvoiceData.billing_date = this.order_detail.date_created;
+        this.InvoiceData.bill_number = this.order_detail.order_no;
+        this.InvoiceData.billing_date = this.order_detail.date_created;
+        this.InvoiceData.discount = this.order_detail.order_discount;
+        this.InvoiceData.sub_total = this.order_detail.order_total;
+        this.InvoiceData.gst_amount = this.order_detail.order_grand_total;
+        this.InvoiceData.net_amount = this.order_detail.netBreakup;
+        this.InvoiceData.order_no = this.order_detail.id;
+        this.InvoiceData.warehouse = "W11";
+        this.InvoiceData.bill_dispatch_type = "Customer";
+        this.InvoiceData.remarks = this.order_detail.remark;
+
+        for (let i = 0; i < this.order_item.length; i++) {
+            this.item_array.push(
+                {
+                    'item_name': this.order_item[i].product_name,
+                    'item_code': this.order_item[i].product_code,
+                    'qty': this.order_item[i].qty,
+                    'mrp': this.order_item[i].price,
+                    'amount': this.order_item[i].net_price,
+                    'discount_amount': this.order_item[i].discount_amount,
+                    'discount_percent': this.order_item[i].discount_percent,
+                    'sub_total': this.order_item[i].amount,
+                    'gst_amount': this.order_item[i].gst_amount,
+                    'gst_percent': this.order_item[i].gst_percent,
+                    'net_amount': this.order_item[i].total_amount
+                },
+            )
+
+        }
+        this.InvoiceData.item_array = this.item_array
+        this.serve.post_rqst({"auth_key":"038288d292d065ef2644521b6a5b5efa" , 'data': this.InvoiceData }, "IntegrationApi/insertInvoice")
+            .subscribe((result => {
+                if (result['statusCode'] == 200) {
+                    this.toast.successToastr(result['statusMsg']);
+                    this.orderDetail();
+                } else {
+                    this.orderDetail();
+                    this.toast.errorToastr(result['statusMsg'])
+                }
+            }))
+    }
+    goTODetail(id) {
+        this.router.navigate(['/billing-details/' + id], { queryParams: { id } });
     }
     openDialog(): void {
         const dialogRef = this.dialog.open(StatusModalComponent, {
-            width: '400px', 
-            panelClass:'cs-model',
+            width: '400px',
+            panelClass: 'cs-model',
             data: {
                 order_status: this.order_detail.order_status,
                 order_id: this.order_id,
@@ -150,32 +198,32 @@ export class OrderDetailComponent implements OnInit {
                 reason: ''
             }
         });
-        
+
         dialogRef.afterClosed().subscribe(result => {
-            if(result != false){
+            if (result != false) {
                 this.orderDetail();
             }
         });
     }
-    
+
     deleteOrderitem(order_id, index) {
         this.alert.confirm("You want to delet this item !").then((result) => {
             if (result) {
                 this.serve.post_rqst({ 'id': order_id }, "Order/primaryOrderDeleteItem")
-                .subscribe((result => {
-                    if (result['status'] == 200) {
-                        this.toast.successToastr('Item Deleted Successfully');
-                        this.order_item.splice(index, 1)
-                        this.orderDetail();
-                    }else{
-                        this.orderDetail();
-                        this.toast.errorToastr(result['status']) 
-                    }
-                }))
+                    .subscribe((result => {
+                        if (result['status'] == 200) {
+                            this.toast.successToastr('Item Deleted Successfully');
+                            this.order_item.splice(index, 1)
+                            this.orderDetail();
+                        } else {
+                            this.orderDetail();
+                            this.toast.errorToastr(result['status'])
+                        }
+                    }))
             }
         })
     }
-    
+
     // }
     order_detail1: any = {}
     edit_qty() {
@@ -189,11 +237,11 @@ export class OrderDetailComponent implements OnInit {
         this.order_item[index].discounted_price = this.order_item[index].discount_amount
         this.order_item[index].dr_disc = this.order_item[index].discount_percent
         this.order_item[index].amount = Amount
-        this.order_item[index].gst_amountbeforfix =(Amount * this.order_item[index].gst_percent )/100
-        this.order_item[index].gst_amount =parseFloat(this.order_item[index].gst_amountbeforfix).toFixed()
+        this.order_item[index].gst_amountbeforfix = (Amount * this.order_item[index].gst_percent) / 100
+        this.order_item[index].gst_amount = parseFloat(this.order_item[index].gst_amountbeforfix).toFixed()
         this.order_item[index].total_amount = parseFloat(this.order_item[index].gst_amount) + Amount;
         cart_data.push(this.order_item[index])
-        
+
         this.serve.post_rqst({ 'id': id, 'cart_data': cart_data }, "order/primaryOrderUpdateItem").subscribe((result => {
             if (result['statusCode'] == 200) {
                 this.editqty = false;
@@ -206,14 +254,14 @@ export class OrderDetailComponent implements OnInit {
             }
         }))
     }
-    
-    
+
+
     amount: any = 0;
     gst_amount: any = 0;
     subtotal: any = 0;
     second_subtotal: any = 0;
     cd_amount: any = 0;
-    
+
     back() {
         window.history.go(-1);
     }
@@ -242,6 +290,6 @@ export class OrderDetailComponent implements OnInit {
             this.orderDetail();
         });
     }
-    
-    
+
+
 }
