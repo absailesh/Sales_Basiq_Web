@@ -1,0 +1,640 @@
+
+<div class="navigation">
+    <div class="nav-container" *ngIf="login_data.id != '432' && login_data.id != '433' && login_data.id != '434' && login_data.id != '435' ">
+        <ul>
+            <li *ngIf="login_data.view_dashboard=='1'">
+                <a mat-button (click)="toggleDropdown(0);clearFilter()" routerLink="/dashboard"  routerLinkActive="active"><i class="material-icons ">dashboard</i>Dashboard </a>
+            </li>
+            
+            <li *ngIf="login_data.view_enquiry=='1'">
+                <a mat-button   (click)="toggleDropdown(0);clearFilter()" routerLink="/lead-list" routerLinkActive="active">
+                    <i class="material-icons ">contact_support</i>Enquiry
+                    <span class="nav-counter" *ngIf="serve.counterArray.enquiry > 0">{{serve.counterArray.enquiry}}</span>
+                </a>
+            </li>
+            
+            <li class="dropdown" *ngIf="login_data.view_influencer_network=='1'">
+                <a mat-button (click)="clearFilter(); toggleDropdown(4);" [ngClass]="{'active':leadactive }" ><i class="material-icons ">hub</i> Influencer Network </a>
+                <ul>
+                    <li *ngFor="let row of serve.InfluenceArray"> 
+                        <a mat-button (click)="clearFilter()" routerLink="influencer/{{row.type}}/{{row.module_name}}/" routerLinkActive="active" >
+                            {{row.module_name}}
+                            <span class="nav-counter" *ngIf="row.dr_count > 0 ">{{row.dr_count}}</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </li>
+            
+            <li class="dropdown" *ngIf="login_data.view_customer_network=='1'">
+                <a mat-button (click)="toggleDropdown(1);clearFilter()" [ngClass]="{'active':distactive }"><i class="material-icons ">people_alt</i> Customer Network</a>
+                <ul>
+                    
+                    <li *ngFor="let row of serve.drArray">
+                        <a mat-button (click)="clearFilter();" routerLink="/distribution-list/{{row.type}}/{{row.module_name}}" routerLinkActive="active"  >
+                            {{row.module_name}}
+                            
+                            <span class="nav-counter" *ngIf="row.dr_count > 0 ">{{row.dr_count}}</span>
+                            
+                        </a>
+                    </li>
+                    
+                </ul>
+            </li>
+            
+            
+            <li class="dropdown" *ngIf="login_data.view_orders=='1'">
+                <a mat-button (click)="clearFilter(); toggleDropdown(2); " [ngClass]="{'active':ordersactive}"><i class="material-icons ">shopping_cart</i> Orders </a>
+                <ul>
+                    <li>
+                        <a mat-button (click)="clearFilter();" routerLink="/order-list" routerLinkActive="active"  >
+                            Primary Order
+                            <span class="nav-counter " *ngIf="serve.counterArray.primary_order > 0">{{serve.counterArray.primary_order}}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a mat-button (click)="clearFilter()" routerLink="/secondary-order-list" routerLinkActive="active" >
+                            Secondary Order
+                            <span class="nav-counter" *ngIf="serve.counterArray.secondary_order > 0">{{serve.counterArray.secondary_order}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="dropdown"  *ngIf="login_data.view_accounts=='1'">
+                <a mat-button (click)="toggleDropdown(6);clearFilter()" [ngClass]="{'active':accountactive}"><i class="material-icons ">receipt_long</i> Accounts </a>
+                <ul>
+                    <li >
+                        <a mat-button routerLink="/billing" routerLinkActive="active"(click)="clearFilter()" >
+                            Invoice
+                        </a>
+                    </li>
+                    <li >
+                        <a mat-button routerLink="/invoice" routerLinkActive="active"(click)="clearFilter()" >
+                            Payments
+                        </a>
+                    </li>
+                    <li >
+                        <a mat-button routerLink="/credit-notes" routerLinkActive="active"(click)="clearFilter()" >
+                            Credit Note
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li *ngIf="login_data.view_dispatch== '1' ">
+                <a mat-button routerLink="/company-dispatch" (click)="toggleDropdown(0);clearFilter()"routerLinkActive="active">
+                    <i class="material-icons ">local_shipping</i> 
+                    Dispatch
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_manual_dispatch== '1' ">
+                <a mat-button routerLink="/manual-dispatch" (click)="toggleDropdown(0);clearFilter()"routerLinkActive="active">
+                    <i class="material-icons ">local_shipping</i> 
+                    Manual Dispatch
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_sales_return== '1' ">
+                <a mat-button routerLink="/sales-return" (click)="toggleDropdown(0);clearFilter()"routerLinkActive="active">
+                    <i class="material-icons ">update</i> 
+                    Sales Return
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_attendence=='1'">
+                <a mat-button routerLink="/attendance" (click)="clearFilter(); toggleDropdown(0);"routerLinkActive="active">
+                    <i class="material-icons ">insert_invitation</i> 
+                    Attendance
+                    <span class="nav-counter" *ngIf="serve.counterArray.today_attendance > 0">{{serve.counterArray.today_attendance > 0 ? serve.counterArray.today_attendance :''}}</span>
+                </a>
+                
+            </li>
+            
+            <li *ngIf="login_data.view_check_in=='1'">
+                
+                <a mat-button routerLink="/checkin" routerLinkActive="active" (click)="clearFilter(); toggleDropdown(0);">
+                    <i class="material-icons ">my_location</i> 
+                    Check In
+                    <span class="nav-counter" *ngIf="serve.counterArray.today_checkin > 0">{{serve.counterArray.today_checkin > 0 ? serve.counterArray.today_checkin : ''}}</span>
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_leaves=='1'">
+                <a mat-button (click)="clearFilter(); toggleDropdown(0);" routerLink="/leave-list" routerLinkActive="active">
+                    <i class="material-icons ">exit_to_app</i>
+                    Leave
+                    <span class="nav-counter" *ngIf="serve.counterArray.pending_leaves > 0">{{serve.counterArray.pending_leaves > 0 ? serve.counterArray.pending_leaves : ''}}</span>
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_travel_plan=='1'">
+                
+                
+                <a mat-button routerLink="/travel-list" routerLinkActive="active" (click)="clearFilter(); toggleDropdown(0);">
+                    <i class="material-icons ">directions_transit</i> 
+                    Travel Plan
+                    <span class="nav-counter" *ngIf="serve.counterArray.pending_travel_plan > 0">{{serve.counterArray.pending_travel_plan > 0 ? serve.counterArray.pending_travel_plan : ''}}</span>
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_follow_up=='1'">
+                <a mat-button routerLink="/followup-list" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons ">add_ic_call</i>
+                    Follow Up
+                    <span class="nav-counter" *ngIf="serve.counterArray.pending_followup > 0">{{serve.counterArray.pending_followup > 0 ? serve.counterArray.pending_followup : ''}}</span>
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_announcement=='1'">
+                <a mat-button routerLink="/announcement-list" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons ">campaign</i>
+                    Announcement
+                    <span class="nav-counter" *ngIf="serve.counterArray.announcementList > 0">{{serve.counterArray.announcementList > 0 ? serve.counterArray.announcementList : ''}}</span>
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_expense=='1'">
+                <a mat-button routerLink="/expense-list" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons ">account_balance_wallet</i>
+                    Expense
+                    <span class="nav-counter" *ngIf="serve.counterArray.pending_expense > 0">{{serve.counterArray.pending_expense > 0 ? serve.counterArray.pending_expense : ''}}</span>
+                </a>
+            </li>
+            
+            <li  *ngIf="login_data.view_event_plan=='1'">
+                <a mat-button routerLink="/contractor-meet" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons ">groups</i>
+                    Event Plan
+                    <span class="nav-counter" *ngIf="serve.counterArray.event > 0">{{serve.counterArray.event > 0 ? serve.counterArray.event : ''}}</span>
+                </a>
+            </li>
+            <li *ngIf="login_data.view_pop_gift=='1'">
+                <a mat-button routerLink="/pop-gift-list" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons ">card_giftcard</i>
+                    Pop & Gift
+                </a>
+            </li>
+            
+            <li  *ngIf="login_data.view_survey=='1'">
+                <a mat-button routerLink="/survey-list" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons ">article</i>
+                    Survey
+                    <span class="nav-counter" *ngIf="serve.counterArray.survey > 0">{{serve.counterArray.survey > 0 ? serve.counterArray.survey : ''}}</span>
+                    
+                </a>
+            </li>
+            <li *ngIf="login_data.view_gift=='1'">
+                <a mat-button routerLink="/gift-list" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons ">card_giftcard</i>
+                    Gift Gallery
+                    <span class="nav-counter" *ngIf="serve.counterArray.gift_gallery > 0">{{serve.counterArray.gift_gallery > 0 ? serve.counterArray.gift_gallery : ''}}</span>
+                    
+                </a>
+            </li>
+            <li *ngIf="login_data.view_bonus_points=='1'">
+                <a mat-button (click)="clearFilter()" routerLink="/bonus-list" routerLinkActive="active">
+                    <i class="material-icons">payments</i>
+                    Bonus Points
+                </a>
+            </li>
+            <li *ngIf="login_data.view_coupon_code=='1'">
+                <a mat-button (click)="clearFilter()" routerLink="/coupon-list" routerLinkActive="active">
+                    <i class="material-icons">qr_code</i>
+                    Coupon Codes
+                </a>
+            </li>
+            <li *ngIf="login_data.view_redeem_request=='1'">
+                <a mat-button (click)="clearFilter()" routerLink="/redeem-request" routerLinkActive="active" >
+                    <i class="material-icons">redeem</i>
+                    Redeem Request
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_task=='1'">
+                <a mat-button (click)="clearFilter()" routerLink="/task-list" routerLinkActive="active">
+                    <i class="material-icons">assignment_add</i>
+                    Task
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_support=='1'">
+                <a (click)="clearFilter()" mat-button routerLink="/support" routerLinkActive="active" >
+                    <i class="material-icons">help</i>
+                    Support
+                </a>
+            </li>
+            
+            <li class="dropdown" *ngIf="login_data.view_target=='1' ">
+                
+                <a mat-button (click)=toggleDropdown(9) [ngClass]="{'active':targetactive}" ><i class="material-icons ">trending_up</i> Target </a>
+                <ul>
+                    <li>
+                        <a mat-button (click)="clearFilter()" routerLink="/userview-target" routerLinkActive="active" >
+                            Employee Target
+                            
+                            <!-- <span class="nav-counter ">{{serve.counterArray.primary_order}}</span> -->
+                        </a>
+                    </li>
+                    <li>
+                        <a mat-button (click)="clearFilter()" routerLink="/distributor-target" routerLinkActive="active" >
+                            Distributor Target
+                        </a>
+                    </li>
+                    <!-- <li *ngIf="login_data.view_dis_target=='1'">
+                        <a mat-button routerLink="/secondary-target" routerLinkActive="active">
+                            Secondary Target
+                        </a>
+                    </li> -->
+                    
+                </ul>
+            </li>
+            
+            <li class="dropdown">
+                <a  mat-button (click)=toggleDropdown(3) [ngClass]="{'active':masteractive}"><i class="material-icons ">star_rate</i>Masters </a>
+                <ul>
+                    <li  *ngIf="login_data.id =='1' ||  login_data.id =='432' || login_data.id =='433' || login_data.id =='435'">
+                        <a  mat-button routerLink="/segment-list" routerLinkActive="active" (click)="clearFilter()">
+                            Segment
+                            <span class="nav-counter" *ngIf="serve.counterArray.segment > 0">{{serve.counterArray.segment}}</span>
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' ||  login_data.id =='432' || login_data.id =='433' || login_data.id =='435'">
+                        <a mat-button routerLink="/product-list" routerLinkActive="active" (click)="clearFilter()">
+                            Products
+                            <span class="nav-counter" *ngIf="serve.counterArray.product > 0">{{serve.counterArray.product}}</span>
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' ||  login_data.id =='432' || login_data.id =='434' || login_data.id =='433'">
+                        <a mat-button routerLink="/catalogue" routerLinkActive="active" (click)="clearFilter()">
+                            PDF Catalogue
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' ||  login_data.id =='432'">
+                        <a mat-button routerLink="/sale-user-list" routerLinkActive="active" (click)="clearFilter()">
+                            Users
+                            <span class="nav-counter" *ngIf="serve.counterArray.active_user > 0">{{serve.counterArray.active_user > 0 ? serve.counterArray.active_user : ''}}</span>
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' ||  login_data.id =='432' || login_data.id =='433'">
+                        <a mat-button routerLink="/customer-category" routerLinkActive="active" (click)="clearFilter()">
+                            Customer Category
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' || login_data.id =='434'">
+                        <a mat-button routerLink="/influencer-user-list" routerLinkActive="active" (click)="clearFilter()">
+                            Influencer Category
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' || login_data.id =='434'">
+                        <a mat-button routerLink="/point-list" routerLinkActive="active" (click)="clearFilter()">
+                            Point Category
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' ||  login_data.id =='432'">
+                        <a mat-button routerLink="/holiday-list" routerLinkActive="active" (click)="clearFilter()">
+                            Holiday
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' ||  login_data.id =='432' || login_data.id =='434' || login_data.id =='433'">
+                        <a mat-button routerLink="/banner-list" routerLinkActive="active" (click)="clearFilter()">
+                            Gallery
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' || login_data.id =='434'">
+                        <a mat-button routerLink="/point-master" routerLinkActive="active" (click)="clearFilter()">
+                            Referral Point Master
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' ||  login_data.id =='432'">
+                        <a mat-button routerLink="/allowances" routerLinkActive="active" (click)="clearFilter()">
+                            Allowance Master
+                        </a>
+                    </li>
+             
+                </ul>
+            </li>
+            
+        </ul>
+    </div>
+
+
+    <!-- Static Condition -->
+    <div class="nav-container" *ngIf="login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435' " >
+        <ul>
+            <li *ngIf="login_data.view_dashboard=='1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')">
+                <a mat-button  title="dashboard" routerLink="/dashboard" (click)="toggleDropdown(0)" routerLinkActive="active"><i class="material-icons ">dashboard</i>Dashboard </a>
+            </li>
+            
+            <li *ngIf="login_data.view_enquiry=='1'  && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')">
+                <a mat-button  routerLink="/lead-list" (click)="toggleDropdown(0)" routerLinkActive="active">
+                    <i class="material-icons ">contact_support</i>Enquiry
+                    <span class="nav-counter" *ngIf="serve.counterArray.enquiry > 0">{{serve.counterArray.enquiry}}</span>
+                </a>
+            </li>
+            
+            <li class="dropdown" *ngIf="login_data.view_influencer_network=='1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435') ">
+                <a mat-button (click)="toggleDropdown(4)" [ngClass]="{'active':leadactive }" ><i class="material-icons ">hub</i> Influencer Network </a>
+                <ul>
+                    <li *ngFor="let row of serve.InfluenceArray"> 
+                        <a mat-button  routerLink="influencer/{{row.type}}/{{row.module_name}}/" routerLinkActive="active">
+                            {{row.module_name}}
+                            <span class="nav-counter" *ngIf="row.dr_count > 0 ">{{row.dr_count}}</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </li>
+            
+            <li class="dropdown" *ngIf="login_data.view_customer_network=='1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')  ">
+                <a mat-button (click)="toggleDropdown(1);clearFilter()" [ngClass]="{'active':distactive }"><i class="material-icons ">people_alt</i> Customer Network</a>
+                <ul>
+                    <li *ngFor="let row of serve.drArray">
+                        <a mat-button  routerLink="/distribution-list/{{row.type}}/{{row.module_name}}" routerLinkActive="active">
+                            {{row.module_name}}
+                            
+                            <span class="nav-counter" *ngIf="row.dr_count > 0 ">{{row.dr_count}}</span>
+                            
+                        </a>
+                    </li>
+                    
+                </ul>
+            </li>
+            
+            
+            <li class="dropdown" *ngIf="login_data.view_orders=='1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')  ">
+                <a mat-button (click)="toggleDropdown(2);clearFilter()" [ngClass]="{'active':ordersactive}"><i class="material-icons ">shopping_cart</i> Orders </a>
+                <ul>
+                    <li>
+                        <a mat-button routerLink="/order-list" routerLinkActive="active">
+                            Primary Order
+                            <span class="nav-counter " *ngIf="serve.counterArray.primary_order > 0">{{serve.counterArray.primary_order}}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a mat-button routerLink="/secondary-order-list" routerLinkActive="active">
+                            Secondary Order
+                            <span class="nav-counter" *ngIf="serve.counterArray.secondary_order > 0">{{serve.counterArray.secondary_order}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="dropdown"  *ngIf="login_data.view_accounts=='1'  && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435') ">
+                <a mat-button (click)="toggleDropdown(6);clearFilter()" [ngClass]="{'active':accountactive}"><i class="material-icons ">receipt_long</i> Accounts </a>
+                <ul>
+                    <li >
+                        <a mat-button routerLink="/billing" routerLinkActive="active">
+                            Invoice
+                        </a>
+                    </li>
+                    <li >
+                        <a mat-button routerLink="/invoice" routerLinkActive="active">
+                            Payments
+                        </a>
+                    </li>
+                    <li >
+                        <a mat-button routerLink="/credit-notes" routerLinkActive="active">
+                            Credit Note
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li *ngIf="login_data.view_dispatch== '1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435') ">
+                <a mat-button routerLink="/company-dispatch" (click)="toggleDropdown(0);clearFilter()"routerLinkActive="active">
+                    <i class="material-icons ">local_shipping</i> 
+                    Dispatch
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_manual_dispatch== '1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435') ">
+                <a mat-button routerLink="/manual-dispatch" (click)="toggleDropdown(0);clearFilter()"routerLinkActive="active">
+                    <i class="material-icons ">local_shipping</i> 
+                    Manual Dispatch
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_sales_return== '1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435') ">
+                <a mat-button routerLink="/sales-return" (click)="toggleDropdown(0);clearFilter()"routerLinkActive="active">
+                    <i class="material-icons ">update</i> 
+                    Sales Return
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_attendence=='1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')">
+                <a mat-button routerLink="/attendance" (click)="toggleDropdown(0);clearFilter()"routerLinkActive="active">
+                    <i class="material-icons ">insert_invitation</i> 
+                    Attendance
+                    <span class="nav-counter" *ngIf="serve.counterArray.today_attendance > 0">{{serve.counterArray.today_attendance > 0 ? serve.counterArray.today_attendance :''}}</span>
+                </a>
+                
+            </li>
+            
+            <li *ngIf="login_data.view_check_in=='1'  && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435') ">
+                
+                <a mat-button routerLink="/checkin" routerLinkActive="active" (click)="toggleDropdown(0);clearFilter()">
+                    <i class="material-icons ">my_location</i> 
+                    Check In
+                    <span class="nav-counter" *ngIf="serve.counterArray.today_checkin > 0">{{serve.counterArray.today_checkin > 0 ? serve.counterArray.today_checkin : ''}}</span>
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_leaves=='1'  && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')">
+                <a mat-button (click)="toggleDropdown(0);clearFilter()" routerLink="/leave-list" routerLinkActive="active">
+                    <i class="material-icons ">exit_to_app</i>
+                    Leave
+                    <span class="nav-counter" *ngIf="serve.counterArray.pending_leaves > 0">{{serve.counterArray.pending_leaves > 0 ? serve.counterArray.pending_leaves : ''}}</span>
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_travel_plan=='1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')">
+                
+                
+                <a mat-button routerLink="/travel-list" routerLinkActive="active" (click)="toggleDropdown(0);clearFilter()">
+                    <i class="material-icons ">directions_transit</i> 
+                    Travel Plan
+                    <span class="nav-counter" *ngIf="serve.counterArray.pending_travel_plan > 0">{{serve.counterArray.pending_travel_plan > 0 ? serve.counterArray.pending_travel_plan : ''}}</span>
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_follow_up=='1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')  ">
+                <a mat-button routerLink="/followup-list" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons ">add_ic_call</i>
+                    Follow Up
+                    <span class="nav-counter" *ngIf="serve.counterArray.pending_followup > 0">{{serve.counterArray.pending_followup > 0 ? serve.counterArray.pending_followup : ''}}</span>
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_announcement=='1'  && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')">
+                <a mat-button routerLink="/announcement-list" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons ">campaign</i>
+                    Announcement
+                    <span class="nav-counter" *ngIf="serve.counterArray.announcementList > 0">{{serve.counterArray.announcementList > 0 ? serve.counterArray.announcementList : ''}}</span>
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_expense=='1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')">
+                <a mat-button routerLink="/expense-list" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons ">account_balance_wallet</i>
+                    Expense
+                    <span class="nav-counter" *ngIf="serve.counterArray.pending_expense > 0">{{serve.counterArray.pending_expense > 0 ? serve.counterArray.pending_expense : ''}}</span>
+                </a>
+            </li>
+            
+            <li  *ngIf="login_data.view_event_plan=='1'  && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')">
+                <a mat-button routerLink="/contractor-meet" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons ">groups</i>
+                    Event Plan
+                    <span class="nav-counter" *ngIf="serve.counterArray.event > 0">{{serve.counterArray.event > 0 ? serve.counterArray.event : ''}}</span>
+                </a>
+            </li>
+            <li *ngIf="login_data.view_pop_gift=='1'  && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')">
+                <a mat-button routerLink="/pop-gift-list" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons ">card_giftcard</i>
+                    Pop & Gift
+                </a>
+            </li>
+            
+            <li  *ngIf="login_data.view_survey=='1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')">
+                <a mat-button routerLink="/survey-list" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons ">article</i>
+                    Survey
+                    <span class="nav-counter" *ngIf="serve.counterArray.survey > 0">{{serve.counterArray.survey > 0 ? serve.counterArray.survey : ''}}</span>
+                    
+                </a>
+            </li>
+            <li *ngIf="login_data.view_gift=='1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')">
+                <a mat-button routerLink="/gift-list" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons ">card_giftcard</i>
+                    Gift Gallery
+                    <span class="nav-counter" *ngIf="serve.counterArray.gift_gallery > 0">{{serve.counterArray.gift_gallery > 0 ? serve.counterArray.gift_gallery : ''}}</span>
+                    
+                </a>
+            </li>
+            <li *ngIf="login_data.view_bonus_points=='1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')">
+                <a mat-button routerLink="/bonus-list" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons">payments</i>
+                    Bonus Points
+                </a>
+            </li>
+            <li *ngIf="login_data.view_coupon_code=='1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')">
+                <a mat-button routerLink="/coupon-list" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons">qr_code</i>
+                    Coupon Codes
+                </a>
+            </li>
+            <li *ngIf="login_data.view_redeem_request=='1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')">
+                <a mat-button routerLink="/redeem-request" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons">redeem</i>
+                    Redeem Request
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_task=='1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')">
+                <a mat-button routerLink="/task-list" routerLinkActive="active" (click)="clearFilter()">
+                    <i class="material-icons">assignment_add</i>
+                    Task
+                </a>
+            </li>
+            
+            <li *ngIf="login_data.view_support=='1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435') ">
+                <a mat-button routerLink="/support" routerLinkActive="active"(click)="clearFilter()">
+                    <i class="material-icons">help</i>
+                    Support
+                </a>
+            </li>
+            
+            <li class="dropdown" *ngIf="login_data.view_target=='1' && (login_data.id == '432' || login_data.id == '433' || login_data.id == '434' || login_data.id == '435')">
+                
+                <a mat-button (click)=toggleDropdown(9) [ngClass]="{'active':targetactive}" ><i class="material-icons ">trending_up</i> Target </a>
+                <ul>
+                    <li>
+                        <a mat-button routerLink="/userview-target" routerLinkActive="active" (click)="clearFilter()">
+                            Employee Target
+                            
+                            <!-- <span class="nav-counter ">{{serve.counterArray.primary_order}}</span> -->
+                        </a>
+                    </li>
+                    <li>
+                        <a mat-button routerLink="/distributor-target" routerLinkActive="active" (click)="clearFilter()">
+                            Distributor Target
+                        </a>
+                    </li>
+                    <!-- <li *ngIf="login_data.view_dis_target=='1'">
+                        <a mat-button routerLink="/secondary-target" routerLinkActive="active">
+                            Secondary Target
+                        </a>
+                    </li> -->
+                    
+                </ul>
+            </li>
+            
+            <li class="dropdown">
+                <a  mat-button (click)=toggleDropdown(3) [ngClass]="{'active':masteractive}"><i class="material-icons ">star_rate</i>Masters </a>
+                <ul>
+                    <li  *ngIf="login_data.id =='1' ||  login_data.id =='432' || login_data.id =='433' || login_data.id =='435'">
+                        <a  mat-button routerLink="/segment-list" routerLinkActive="active" (click)="clearFilter()">
+                            Segment
+                            <span class="nav-counter" *ngIf="serve.counterArray.segment > 0">{{serve.counterArray.segment}}</span>
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' ||  login_data.id =='432' || login_data.id =='433' || login_data.id =='435'">
+                        <a mat-button routerLink="/product-list" routerLinkActive="active" (click)="clearFilter()">
+                            Products
+                            <span class="nav-counter" *ngIf="serve.counterArray.product > 0">{{serve.counterArray.product}}</span>
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' ||  login_data.id =='432' || login_data.id =='434' || login_data.id =='433'">
+                        <a mat-button routerLink="/catalogue" routerLinkActive="active" (click)="clearFilter()">
+                            PDF Catalogue
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' ||  login_data.id =='432'">
+                        <a mat-button routerLink="/sale-user-list" routerLinkActive="active" (click)="clearFilter()">
+                            Users
+                            <span class="nav-counter" *ngIf="serve.counterArray.active_user > 0">{{serve.counterArray.active_user > 0 ? serve.counterArray.active_user : ''}}</span>
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' ||  login_data.id =='432' || login_data.id =='433'">
+                        <a mat-button routerLink="/customer-category" routerLinkActive="active" (click)="clearFilter()">
+                            Customer Category
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' || login_data.id =='434'">
+                        <a mat-button routerLink="/influencer-user-list" routerLinkActive="active" (click)="clearFilter()">
+                            Influencer Category
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' || login_data.id =='434'">
+                        <a mat-button routerLink="/point-list" routerLinkActive="active" (click)="clearFilter()">
+                            Point Category
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' ||  login_data.id =='432'">
+                        <a mat-button routerLink="/holiday-list" routerLinkActive="active" (click)="clearFilter()">
+                            Holiday
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' ||  login_data.id =='432' || login_data.id =='434' || login_data.id =='433'">
+                        <a mat-button routerLink="/banner-list" routerLinkActive="active" (click)="clearFilter()">
+                            Gallery
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' || login_data.id =='434'">
+                        <a mat-button routerLink="/point-master" routerLinkActive="active" (click)="clearFilter()">
+                            Referral Point Master
+                        </a>
+                    </li>
+                    <li *ngIf="login_data.id =='1' ||  login_data.id =='432'">
+                        <a mat-button routerLink="/allowances" routerLinkActive="active" (click)="clearFilter()">
+                            Allowance Master
+                        </a>
+                    </li>
+             
+                </ul>
+            </li>
+            
+        </ul>
+    </div>
+    <!-- Static Condition -->
+
+</div>
+
