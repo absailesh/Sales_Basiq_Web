@@ -11,7 +11,7 @@
                                 <button mat-button class="ouline-btns whatsapp"><img src="assets/img/icons/whatsapp.png"> Send Whatsapp</button>
                                 <button mat-button class="ouline-btns email"><img src="assets/img/icons/email.png"> Send Mail</button>
                                 <button mat-button class="ouline-btns status" *ngIf="order_detail.order_status =='Pending' && login_data.edit_order=='1'" (click)="openDialog()"><img src="assets/img/icons/update.png"> Change Status</button>
-                                <button mat-button class="ouline-btns status" *ngIf="order_detail.order_status =='Approved' && login_data.edit_order=='1'" (click)="updateInvoice()"><img src="assets/img/icons/invoice.png"> Insert Invoice</button>
+                                <button mat-button class="ouline-btns status" *ngIf="order_detail.order_status =='Approved'" (click)="updateInvoice()"><img src="assets/img/icons/invoice.png"> Insert Invoice</button>
                             </div>
                         </div>
                     </div>
